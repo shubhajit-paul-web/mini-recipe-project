@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+#add-recipe-form label {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 0.15rem;
+}
+
+#add-recipe-form label span {
+    color: red;
+}
+
+#add-recipe-form input {
+    border: 1px solid #333;
+    padding: 0.8rem 0.7rem;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1.1rem;
+}
+
+#add-recipe-form .input-error-msg {
+    display: block;
+    color: red;
+    font-size: 0.94rem;
+}
+
+button {
+    cursor: pointer;
+}
