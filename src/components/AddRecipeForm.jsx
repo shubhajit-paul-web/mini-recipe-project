@@ -34,10 +34,7 @@ const AddRecipeForm = () => {
 			},
 		]);
 
-		toast.success("Recipe added successfully!", {
-			position: "bottom-right",
-			autoClose: 2000,
-		});
+		toast.success("Recipe added successfully!");
 
 		reset();
 	};
@@ -51,7 +48,7 @@ const AddRecipeForm = () => {
 				<label htmlFor="recipeName" className="block text-sm font-medium text-gray-700 mb-1">
 					Recipe Name <span className="text-red-500">*</span>
 				</label>
-				<input {...register("recipeName", {required: true})} id="recipeName" type="text" placeholder="e.g., Creamy Tomato Pasta" className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+				<input {...register("recipeName", {required: true})} autoFocus id="recipeName" type="text" placeholder="e.g., Creamy Tomato Pasta" className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
 			</div>
 
 			{/* Image Upload */}

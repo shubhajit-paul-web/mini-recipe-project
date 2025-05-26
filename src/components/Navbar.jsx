@@ -8,7 +8,7 @@ const Navbar = () => {
 	};
 
 	return (
-		<header className="w-full h-[5.5rem] bg-white border-b border-zinc-400 flex justify-around items-center fixed top-0 left-0">
+		<header className="w-full h-[5.5rem] bg-white border-b border-zinc-400 z-[9999] flex justify-around items-center fixed top-0 left-0">
 			<Link to="/">
 				<img src={logo} alt="logo" className="w-30" />
 			</Link>
