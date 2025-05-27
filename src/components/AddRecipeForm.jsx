@@ -92,15 +92,15 @@ const AddRecipeForm = () => {
 			{/* Cooking Time */}
 			<div className="mb-5">
 				<label htmlFor="cookingTime" className="block text-sm font-medium text-gray-700 mb-1">
-					Cooking Time (in minutes)
+					Cooking Time (in minutes) <span className="text-red-500">*</span>
 				</label>
-				<input {...register("cookingTime")} id="cookingTime" type="number" min="1" placeholder="e.g., 30" className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+				<input {...register("cookingTime", {required: true})} id="cookingTime" type="number" min="1" placeholder="e.g., 30" className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
 			</div>
 
 			{/* Category */}
 			<div className="mb-5">
 				<label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-					Category
+					Category <span className="text-red-500">*</span>
 				</label>
 				<select {...register("category", {required: true})} id="category" className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
 					<option value="">Select Category</option>
@@ -116,9 +116,9 @@ const AddRecipeForm = () => {
 			{/* Difficulty */}
 			<div className="mb-5">
 				<label htmlFor="difficulty" className="block text-sm font-medium text-gray-700 mb-1">
-					Difficulty Level
+					Difficulty Level <span className="text-red-500">*</span>
 				</label>
-				<select {...register("difficulty")} id="difficulty" className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+				<select {...register("difficulty", {required: true})} id="difficulty" className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
 					<option value="">Select Difficulty</option>
 					<option value="Easy">🟢 Easy</option>
 					<option value="Medium">🟠 Medium</option>
