@@ -1,10 +1,11 @@
 import {useContext} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {RecipeContext} from "../Context/AppContext";
 import {toast} from "react-toastify";
 
 const RecipeDetailsPage = () => {
 	const params = useParams();
+	const navigate = useNavigate();
 	const {recipes, setRecipe} = useContext(RecipeContext);
 	const recipeData = recipes.find((recipe) => recipe.id === params.id);
 
@@ -24,6 +25,9 @@ const RecipeDetailsPage = () => {
 		});
 	};
 
+	// handling go back btn
+	const handleGoBackBtn = () => navigate(-1);
+
 	return (
 		<div className="relative p-8 min-h-[85vh] w-5/6 m-auto flex gap-25">
 			{/* LEFT: Image & Description */}
@@ -31,10 +35,16 @@ const RecipeDetailsPage = () => {
 				<h1 className="text-4xl text-zinc-700 font-bold">{recipeData.recipeName}</h1>
 				<img className="h-[20rem] aspect-[4/2] object-cover object-center rounded-2xl mt-5" src={recipeData.imageURL} alt={`${recipeData.recipeName} image`} />
 				<p className="text-lg text-zinc-700 mt-6">{recipeData.description}</p>
-				{/* Add/remove favorites */}
-				<button className={`w-max top-[calc(100%-1.55rem)] mt-6 text-base py-3 px-5 rounded-xl text-red-700 ${recipeData.isFavorite ? "bg-red-200 " : "bg-pink-500 text-white"}`} data-id={recipeData.id} onClick={handleToggleFavorite}>
-					{recipeData.isFavorite ? "Remove from Favorites" : "🤍 Add to Favorites"}
-				</button>
+				<div className="mt-6 flex items-center gap-2">
+					{/* Go back btn */}
+					<button className="text-base py-3 px-4 bg-red-600 text-white rounded-md" onClick={handleGoBackBtn}>
+						Go Back
+					</button>
+					{/* Add/remove favorites */}
+					<button className={`w-max top-[calc(100%-1.55rem)] text-base py-3 px-5 rounded-md text-red-700 ${recipeData.isFavorite ? "bg-red-200 " : "bg-pink-500 text-white"}`} data-id={recipeData.id} onClick={handleToggleFavorite}>
+						{recipeData.isFavorite ? "Remove from Favorites" : "🤍 Add to Favorites"}
+					</button>
+				</div>
 			</div>
 			{/* RIGHT: Ingredients & Metadata */}
 			<div className="w-1/2 py-5">

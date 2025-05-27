@@ -3,8 +3,10 @@ import {useForm, useWatch} from "react-hook-form";
 import {toast} from "react-toastify";
 import {RecipeContext} from "../Context/AppContext";
 import {nanoid} from "nanoid";
+import {useNavigate} from "react-router-dom";
 
 const AddRecipeForm = () => {
+	const navigate = useNavigate();
 	const {recipes, setRecipe, setRecipePrev} = useContext(RecipeContext);
 	const {register, handleSubmit, reset, control} = useForm();
 
@@ -35,8 +37,12 @@ const AddRecipeForm = () => {
 		]);
 
 		toast.success("Recipe added successfully!");
-
 		reset();
+
+		// redirect to recipes page after 1 second
+		setTimeout(() => {
+			navigate("/recipes");
+		}, 1000);
 	};
 
 	return (
