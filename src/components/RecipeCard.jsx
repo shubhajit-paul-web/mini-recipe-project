@@ -5,7 +5,7 @@ import {toast} from "react-toastify";
 import {Link} from "react-router-dom";
 
 const RecipeCard = ({info}) => {
-	const {setRecipe} = useContext(RecipeContext);
+	const {recipes, setRecipe} = useContext(RecipeContext);
 	const {id, recipeName, imageURL, description, cookingTime, tags, category, isFavorite} = info;
 	const tagsArr = tags && tags.split(", "); // convert tags (string) into array
 
@@ -13,16 +13,23 @@ const RecipeCard = ({info}) => {
 	const handleToggleFavorite = ({target}) => {
 		const cardID = target.dataset.id;
 
-		setRecipe((prevRecipes) => {
-			return prevRecipes.map((recipe) => {
-				if (recipe.id === cardID) {
-					recipe.isFavorite = !recipe.isFavorite;
+		const prevRecipes = recipes.map((recipe) => {
+			if (recipe.id === cardID) {
+				const updatedRecipe = {
+					...recipe,
+					isFavorite: !recipe.isFavorite,
+				};
 
-					toast.success(recipe.isFavorite ? "Recipe added to your favorites!" : "Recipe removed from your favorites.");
-				}
-				return recipe;
-			});
+				toast.success(updatedRecipe.isFavorite ? "Recipe added to your favorites!" : "Recipe removed from your favorites.");
+
+				return updatedRecipe;
+			}
+			
+			return recipe;
 		});
+
+		setRecipe(prevRecipes);
+		localStorage.setItem("recipes", JSON.stringify(prevRecipes));
 	};
 
 	return (

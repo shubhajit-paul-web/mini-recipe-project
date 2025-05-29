@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import pizzaImg from "../assets/images/pizza-img.png";
 
 const Home = () => {
@@ -17,7 +17,9 @@ const Home = () => {
 				<p className="mt-5 text-base md:text-xl text-gray-600 font-medium max-w-xl ">Build your own digital cookbook 🍳 — store all your favorite recipes, step-by-step instructions, and cooking memories in one beautiful place.</p>
 
 				{/* Optional Call to Action */}
-				<button className="mt-10 bg-[#FF9800] hover:bg-[#fb8c00] text-white font-semibold px-6 py-3 rounded-full shadow-lg transition duration-300 cursor-pointer" onClick={() => navigate("/add-recipe")}>🍲 Create Your First Recipe</button>
+				<button className="mt-10 bg-[#FF9800] hover:bg-[#fb8c00] text-white font-semibold px-6 py-3 rounded-full shadow-lg transition duration-300 cursor-pointer" onClick={() => navigate("/add-recipe")}>
+					🍲 Create Your First Recipe
+				</button>
 			</div>
 			{/* Banner Image */}
 			<div className="min-w-[25rem] w-[35vw]">

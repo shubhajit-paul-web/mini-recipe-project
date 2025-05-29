@@ -2,18 +2,29 @@ import {useContext, useEffect} from "react";
 import {useForm, useWatch} from "react-hook-form";
 import {toast} from "react-toastify";
 import {RecipeContext} from "../Context/AppContext";
-import {nanoid} from "nanoid";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
-const AddRecipeForm = () => {
+const EditRecipeForm = () => {
+	const params = useParams();
 	const navigate = useNavigate();
-	const {recipes, setRecipe, setRecipePrev} = useContext(RecipeContext);
-	const {register, handleSubmit, reset, control} = useForm();
+	const {recipes, setRecipe, setRecipePrev, setRecipeImgPrev} = useContext(RecipeContext);
 
-	const allFields = useWatch({control, name: ["recipeName", "imageURL", "description", "cookingTime", "tags", "category"]});
+	const recipeData = recipes.find((recipe) => recipe.id === params.id);
+
+	const {register, handleSubmit, reset, control} = useForm({
+		defaultValues: {
+			...recipeData,
+		},
+	});
+
+	const allFields = useWatch({control, name: ["recipeName", "description", "cookingTime", "tags", "category"]});
 
 	useEffect(() => {
-		const [recipeName, imageURL, description, cookingTime, tags, category] = allFields;
+		setRecipeImgPrev(recipeData?.imageURL);
+	}, []);
+
+	useEffect(() => {
+		const [recipeName, description, cookingTime, tags, category] = allFields;
 
 		setRecipePrev({
 			recipeName: recipeName || "Recipe Name",
@@ -21,46 +32,72 @@ const AddRecipeForm = () => {
 			cookingTime: cookingTime || "",
 			category: category || "category",
 			tags: tags || "",
-			imageURL: imageURL?.[0] ? URL.createObjectURL(imageURL?.[0]) : null,
 		});
 	}, [allFields]);
 
+	// Edit/update recipe details (util function)
+	const editRecipeUtils = (reader, data) => {
+		const base64 = reader.result;
+
+		const updatedRecipes = recipes.map((recipe) => {
+			if (recipe.id === params.id) {
+				return {
+					...recipe,
+					...data,
+					imageURL: base64 || recipeData.imageURL,
+				};
+			}
+			return recipe;
+		});
+
+		setRecipe(updatedRecipes);
+		// set data to localstorage
+		localStorage.setItem("recipes", JSON.stringify([...updatedRecipes]));
+
+		toast.success("Recipe added successfully!");
+		reset();
+
+		// redirect to recipes page after 1 second
+		setTimeout(() => {
+			navigate("/recipes");
+		}, 1000);
+	};
+
+	// handling form data (edit)
 	const handleFormData = (data) => {
-		const imageFile = data?.imageURL?.[0];
+		const imageFile = data?.imageURL?.[0] || recipeData?.imageURL;
+
 		const reader = new FileReader();
+
+		if (typeof data?.imageURL?.[0] === "object") {
+			reader.onloadend = () => {
+				editRecipeUtils(reader, data);
+			};
+
+			reader.readAsDataURL(imageFile);
+		} else {
+			editRecipeUtils(reader, data);
+		}
+	};
+
+	// handling new preview image
+	const handleNewPrevImage = (e) => {
+		const reader = new FileReader();
+		const imageFile = e.target.files[0];
 
 		if (imageFile) {
 			reader.onloadend = () => {
 				const base64 = reader.result;
-				const extraData = {
-					id: nanoid(),
-					...data,
-					imageURL: base64,
-					isFavorite: false,
-				};
-
-				setRecipe([...recipes, extraData]);
-
-				// set data to localstorage
-				localStorage.setItem("recipes", JSON.stringify([...recipes, extraData]));
+				setRecipeImgPrev(base64);
 			};
-
-			toast.success("Recipe added successfully!");
-			reset();
-
-			// redirect to recipes page after 1 second
-			setTimeout(() => {
-				navigate("/recipes");
-			}, 1000);
-
 			reader.readAsDataURL(imageFile);
 		}
 	};
 
 	return (
 		<form onSubmit={handleSubmit(handleFormData)} className="w-full max-w-2xl p-8 bg-white shadow-md rounded-xl border" id="add-recipe-form">
-			<h2 className="text-2xl font-semibold text-gray-800 mb-8">🍳 Add a New Recipe</h2>
-
+			<h2 className="text-2xl font-semibold text-gray-800 mb-8">🍳 Edit Recipe</h2>
+			{/* <img src={recipeData.imageURL} alt="" /> */}
 			{/* Recipe Name */}
 			<div className="mb-5">
 				<label htmlFor="recipeName" className="block text-sm font-medium text-gray-700 mb-1">
@@ -72,9 +109,9 @@ const AddRecipeForm = () => {
 			{/* Image Upload */}
 			<div className="mb-5">
 				<label htmlFor="imageURL" className="block text-sm font-medium text-gray-700 mb-1">
-					Recipe Image <span className="text-red-500">*</span>
+					Recipe Image
 				</label>
-				<input {...register("imageURL", {required: true})} id="imageURL" type="file" accept="image/*" className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100" />
+				<input {...register("imageURL")} id="imageURL" type="file" accept="image/*" className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100" onChange={handleNewPrevImage} />
 			</div>
 
 			{/* Description */}
@@ -146,12 +183,12 @@ const AddRecipeForm = () => {
 				<input {...register("tags", {required: true})} id="tags" type="text" placeholder="e.g., spicy, vegetarian, gluten-free" className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
 			</div>
 
-			{/* Submit Button */}
-			<button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-md transition duration-300">
-				<span className="text-lg leading-none">+</span> Add Recipe
+			{/* Edit/Save Button */}
+			<button type="submit" className="w-full bg-green-600 text-white font-semibold py-3 px-4 rounded-md transition duration-300">
+				<span className="text-lg leading-none">+</span> Save Recipe
 			</button>
 		</form>
 	);
 };
 
-export default AddRecipeForm;
+export default EditRecipeForm;

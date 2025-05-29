@@ -10,7 +10,7 @@ const Recipes = () => {
 		<div className="p-10 pt-8 min-h-[calc(100vh-5.5rem)] bg-zinc-100">
 			{recipes.length ? <HeadingContent /> : <NoRecipesHeading />}
 
-			<div className="flex flex-wrap gap-15">
+			<div className="flex justify-center flex-wrap gap-15">
 				{recipes.map((recipe) => {
 					return <RecipeCard key={recipe.id} info={recipe} />;
 				})}

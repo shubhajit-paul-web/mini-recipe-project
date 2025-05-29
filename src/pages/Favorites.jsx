@@ -8,7 +8,7 @@ const Favorites = () => {
 
 	return (
 		<div className="min-h-[calc(100vh-5.5rem)] bg-zinc-100 p-10 pt-1">
-      {<HeadingFavorites info={recipes} />}
+			{<HeadingFavorites info={recipes} />}
 			<div className="flex flex-wrap gap-15">
 				{recipes
 					.filter((recipe) => recipe.isFavorite)
